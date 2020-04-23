@@ -9,15 +9,14 @@ WORKDIR /go/src/github.com/prometheus/client_golang
 COPY . .
 WORKDIR /go/src/github.com/prometheus/client_golang/prometheus
 RUN go get -d
-WORKDIR /go/src/github.com/prometheus/client_golang/examples/random
-RUN CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w'
-WORKDIR /go/src/github.com/prometheus/client_golang/examples/simple
-RUN CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w'
+#WORKDIR /go/src/github.com/prometheus/client_golang/examples/random
+#RUN CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w'
+#WORKDIR /go/src/github.com/prometheus/client_golang/examples/simple
+#RUN CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w'
 
 # Final image.
 FROM quay.io/prometheus/busybox:latest
 LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
-COPY --from=builder /go/src/github.com/prometheus/client_golang/examples/random \
-    /go/src/github.com/prometheus/client_golang/examples/simple ./
+COPY --from=builder /go/src/github.com/prometheus/client_golang/prometheus/api ./
 EXPOSE 8080
-CMD ["echo", "Please run an example. Either /random or /simple"]
+#CMD ["echo", "Please run an example. Either /random or /simple"]
